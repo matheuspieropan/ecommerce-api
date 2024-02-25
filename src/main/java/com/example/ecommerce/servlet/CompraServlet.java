@@ -2,7 +2,6 @@ package com.example.ecommerce.servlet;
 
 import com.example.ecommerce.dto.CompraRequest;
 import com.example.ecommerce.repository.CompraRepository;
-import com.example.ecommerce.repository.ItemRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -19,8 +18,6 @@ public class CompraServlet extends HttpServlet {
 
     private final CompraRepository compraRepository = new CompraRepository();
 
-    private final ItemRepository itemRepository = new ItemRepository();
-
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
@@ -33,11 +30,7 @@ public class CompraServlet extends HttpServlet {
             }
 
             CompraRequest compraRequest = objectMapper.readValue(json.toString(), CompraRequest.class);
-            int quantidadeDisponivel = itemRepository.obterQuantidadeItem(compraRequest.getIdItem());
-
-            if (quantidadeDisponivel > 0) {
-                compraRepository.realizarCompra(compraRequest);
-            }
+            compraRepository.realizarCompra(compraRequest.getIdItem(), compraRequest.getQuantidade());
         }
     }
 }
